@@ -1,0 +1,64 @@
+<h2><%= @user.username %></h2>
+<p>MY Channel ARN: <%= @user.channel_arn %></p>
+<p>MY playback URL: <%= @user.playback_url %></p>
+<p>MY super secret stream key: <%= @user.stream_key.value %></p>
+
+
+<turbo-frame id="ivs_player">
+  <script src="https://player.live-video.net/1.24.0/amazon-ivs-player.min.js"></script>
+  <div id="amazon-ivs">
+    <video id="ivs-video"
+      autoplay
+      controls
+      playsinline
+      style="max-height: 500px; max-width: 500px" 
+    ></video>
+  </div>
+  <script>
+    const url="https://001019c590fc.us-east-1.playback.live-video.net/api/video/v1/us-east-1.504890411447.channel.ADeCIXWPy4pf.m3u8"
+    if (!IVSPlayer.isPlayerSupported) {
+      alert("Your browser does not support the Amazon IVS player.");
+    } 
+    // Create the player first
+    const player = IVSPlayer.create(); 
+    const video_target = document.getElementById("ivs-video");
+    player.attachHTMLVideoElement(video_target);
+    player.load(url);
+    player.play(); 
+  </script>
+</turbo-frame>
+
+<%= javascript_pack_tag 'stream' %>
+<html>
+  <head>
+    <script src="https://web-broadcast.live-video.net/1.12.0/amazon-ivs-web-broadcast.js"></script>
+  </head>
+  <style>
+
+  .h-full{
+    height:500px !important;
+
+  }
+  </style>
+
+  <body class="container-fluid p-3">
+
+    <div class="row">
+      <div class="col-sm-6 offset-sm-3">
+        <span class="badge bg-info fs-3 d-none mb-3 w-100" id="online-indicator">Online</span>
+        <canvas id="broadcast-preview" class="h-full" height="100px"></canvas>
+      </div>
+    </div>
+
+    <div class="d-flex flex-column col-sm-6 offset-sm-3 p-1">
+      <select name="cam-select" id="cam-select" class="form-select w-100 mb-3"></select>
+      <select name="mic-select" id="mic-select" class="form-select w-100 mb-3"></select> 
+      <input type="text" name="endpoint" id="endpoint" class="form-control w-100 mb-3" placeholder="Ingest Endpoint" />
+      <input type="password" name="stream-key" id="stream-key" class="form-control w-100 mb-3" placeholder="Stream Key" />
+      <button class="btn btn-primary w-100 shadow mb-3" id="stream-btn">Stream</button>
+      <button id="screenshare-btn" class="btn btn-outline-primary mb-3">Share Screen</button>
+      <button id="overlay-btn" class="btn btn-secondary">Overlay</button>
+    </div>
+    
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Screen Sharing Demo</title>
+</head>
+<body>
+  <h1>Screen Sharing Demo</h1>
+  <div id="screenshareArea"></div>
+  <button id="startButton">Start Sharing</button>
+
+  <script>
+    document.getElementById('startButton').onclick = async function() {
+      try {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        const videoElement = document.createElement('video');
+        videoElement.srcObject = stream;
+        videoElement.autoplay = true;
+        document.getElementById('screenshareArea').appendChild(videoElement);
+        
+        // Example code to send stream to backend (replace with your implementation)
+        const formData = new FormData();
+        formData.append('stream_key', stream_key);
+
+        fetch('/streams/start', {
+          method: 'POST',
+          body: formData
+        });
+
+      } catch (error) {
+        console.error('Error accessing screen:', error);
+      }
+    };
+  </script>
+</body>
+</html>
